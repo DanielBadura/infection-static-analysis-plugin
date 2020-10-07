@@ -8,6 +8,7 @@ use Infection\Mutant\Mutant;
 use Psalm\Internal\Analyzer\ProjectAnalyzer;
 
 use function array_key_exists;
+use function count;
 
 /**
  * @internal
@@ -36,8 +37,11 @@ class RunStaticAnalysisAgainstMutant
     {
         $path            = $mutant->getFilePath();
         $projectAnalyzer = ($this->makeFreshAnalyzer)();
+        $filePaths = [$path];
 
-        $projectAnalyzer->checkFile($path);
+        $codebase = $projectAnalyzer->getCodebase();
+        $codebase->reloadFiles($projectAnalyzer, $filePaths);
+        $codebase->analyzer->analyzeFiles($projectAnalyzer, count($filePaths), false);
 
         return ! array_key_exists(
             $path,

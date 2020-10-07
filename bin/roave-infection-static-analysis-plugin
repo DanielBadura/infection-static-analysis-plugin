@@ -38,8 +38,6 @@ use function getcwd;
     }
 
     $makeAnalyzer = static function () use ($cwd): ProjectAnalyzer {
-        RuntimeCaches::clearAll();
-
         $config = Config::getConfigForPath($cwd, $cwd, Report::TYPE_CONSOLE);
 
         $config->setIncludeCollector(new IncludeCollector());
